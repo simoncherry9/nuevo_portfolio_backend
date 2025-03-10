@@ -3,16 +3,19 @@ const router = express.Router();
 const projectsController = require('../controllers/proyectsController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Obtener todos los proyectos (GET) - Pública
+// **Importar las validaciones desde el controlador**
+const { createProjectValidators, updateProjectValidators, deleteProjectValidators } = require('../controllers/proyectsController');
+
+// **Obtener todos los proyectos (GET) - Ruta pública**
 router.get('/', projectsController.getAllProjects);
 
-// Crear un nuevo proyecto (POST) - Protegida
-router.post('/', authMiddleware, projectsController.createProject);
+// **Crear un nuevo proyecto (POST) - Protegida por autenticación y validación de entrada**
+router.post('/', authMiddleware, createProjectValidators, projectsController.createProject);
 
-// Actualizar un proyecto (PUT) - Protegida
-router.put('/:id', authMiddleware, projectsController.updateProject);
+// **Editar un proyecto (PUT) - Protegida por autenticación y validación de entrada**
+router.put('/:id', authMiddleware, updateProjectValidators, projectsController.updateProject);
 
-// Eliminar un proyecto (DELETE) - Protegida
-router.delete('/:id', authMiddleware, projectsController.deleteProject);
+// **Eliminar un proyecto (DELETE) - Protegida por autenticación y validación de entrada**
+router.delete('/:id', authMiddleware, deleteProjectValidators, projectsController.deleteProject);
 
 module.exports = router;
