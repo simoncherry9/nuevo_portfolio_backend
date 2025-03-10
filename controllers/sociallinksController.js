@@ -1,17 +1,23 @@
+const { validationResult, body, param } = require('express-validator'); // Validación
 const SocialLink = require('../models/sociallinks');
-const { validationResult } = require('express-validator'); // Si necesitas validación
 
-// Crear un nuevo enlace social (POST)
+// **Validaciones para la creación de un enlace social**
+const createSocialLinkValidators = [
+    body('name').notEmpty().withMessage('El nombre del enlace social es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
+    body('url').notEmpty().withMessage('La URL es obligatoria').isURL().withMessage('La URL debe ser válida'),
+    body('icon').optional().isLength({ max: 50 }).withMessage('El icono no puede tener más de 50 caracteres'),
+    body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
+];
+
+// **Crear un nuevo enlace social (POST)**
 exports.createSocialLink = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { name, url, icon, category } = req.body;
-
-        // Validación de los campos (opcional)
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
         const socialLink = await SocialLink.create({ name, url, icon, category });
         res.status(201).json({ message: 'Enlace social creado', socialLink });
     } catch (error) {
@@ -19,7 +25,7 @@ exports.createSocialLink = async (req, res) => {
     }
 };
 
-// Obtener todos los enlaces sociales (GET) - Pública
+// **Obtener todos los enlaces sociales (GET) - Pública**
 exports.getAllSocialLinks = async (req, res) => {
     try {
         const socialLinks = await SocialLink.findAll();
@@ -29,8 +35,22 @@ exports.getAllSocialLinks = async (req, res) => {
     }
 };
 
-// Actualizar un enlace social (PUT)
+// **Validaciones para la actualización de un enlace social**
+const updateSocialLinkValidators = [
+    param('id').isInt().withMessage('El ID del enlace social debe ser un número entero'),
+    body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
+    body('url').optional().isURL().withMessage('La URL debe ser válida'),
+    body('icon').optional().isLength({ max: 50 }).withMessage('El icono no puede tener más de 50 caracteres'),
+    body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
+];
+
+// **Actualizar un enlace social (PUT)**
 exports.updateSocialLink = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
         const { name, url, icon, category } = req.body;
@@ -47,8 +67,18 @@ exports.updateSocialLink = async (req, res) => {
     }
 };
 
-// Eliminar un enlace social (DELETE)
+// **Validaciones para la eliminación de un enlace social**
+const deleteSocialLinkValidators = [
+    param('id').isInt().withMessage('El ID del enlace social debe ser un número entero'),
+];
+
+// **Eliminar un enlace social (DELETE)**
 exports.deleteSocialLink = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
 
@@ -62,4 +92,15 @@ exports.deleteSocialLink = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+};
+
+// **Exportar validaciones y funciones**
+module.exports = {
+    createSocialLinkValidators,
+    updateSocialLinkValidators,
+    deleteSocialLinkValidators,
+    createSocialLink: exports.createSocialLink,
+    updateSocialLink: exports.updateSocialLink,
+    deleteSocialLink: exports.deleteSocialLink,
+    getAllSocialLinks: exports.getAllSocialLinks
 };

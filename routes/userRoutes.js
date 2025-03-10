@@ -2,15 +2,21 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { createUserValidators, updateUserValidators, deleteUserValidators, loginValidators } = require('../controllers/userController');  // Importar las validaciones
 
-router.post('/login', userController.login);
+// **Login (POST)**
+router.post('/login', loginValidators, userController.login);
 
-router.post('/register', userController.createUser);
+// **Registro (POST)**
+router.post('/register', createUserValidators, userController.createUser);
 
+// **Obtener todos los usuarios (GET) - Protegida**
 router.get('/', authMiddleware, userController.getAllUsers);
 
-router.put('/edit/:id', authMiddleware, userController.updateUser);
+// **Actualizar un usuario (PUT) - Protegida y con validación**
+router.put('/edit/:id', authMiddleware, updateUserValidators, userController.updateUser);
 
-router.delete('/remove/:id', authMiddleware, userController.deleteUser);
+// **Eliminar un usuario (DELETE) - Protegida y con validación**
+router.delete('/remove/:id', authMiddleware, deleteUserValidators, userController.deleteUser);
 
 module.exports = router;

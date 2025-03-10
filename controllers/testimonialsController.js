@@ -1,17 +1,23 @@
+const { validationResult, body, param } = require('express-validator'); // Validación
 const Testimonial = require('../models/testimonials');
-const { validationResult } = require('express-validator'); // Si necesitas validación
 
-// Crear un nuevo testimonio (POST)
+// **Validaciones para la creación de un testimonio**
+const createTestimonialValidators = [
+    body('name').notEmpty().withMessage('El nombre es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
+    body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
+    body('jobTitle').optional().isLength({ max: 50 }).withMessage('El título del trabajo no puede tener más de 50 caracteres'),
+    body('company').optional().isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
+];
+
+// **Crear un nuevo testimonio (POST)**
 exports.createTestimonial = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { name, content, jobTitle, company } = req.body;
-
-        // Validación de los campos (opcional)
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
         const testimonial = await Testimonial.create({ name, content, jobTitle, company });
         res.status(201).json({ message: 'Testimonio creado', testimonial });
     } catch (error) {
@@ -19,7 +25,7 @@ exports.createTestimonial = async (req, res) => {
     }
 };
 
-// Obtener todos los testimonios (GET) - Pública
+// **Obtener todos los testimonios (GET) - Pública**
 exports.getAllTestimonials = async (req, res) => {
     try {
         const testimonials = await Testimonial.findAll();
@@ -29,8 +35,22 @@ exports.getAllTestimonials = async (req, res) => {
     }
 };
 
-// Actualizar un testimonio (PUT)
+// **Validaciones para la actualización de un testimonio**
+const updateTestimonialValidators = [
+    param('id').isInt().withMessage('El ID del testimonio debe ser un número entero'),
+    body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
+    body('content').optional().isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
+    body('jobTitle').optional().isLength({ max: 50 }).withMessage('El título del trabajo no puede tener más de 50 caracteres'),
+    body('company').optional().isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
+];
+
+// **Actualizar un testimonio (PUT)**
 exports.updateTestimonial = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
         const { name, content, jobTitle, company } = req.body;
@@ -47,8 +67,18 @@ exports.updateTestimonial = async (req, res) => {
     }
 };
 
-// Eliminar un testimonio (DELETE)
+// **Validaciones para la eliminación de un testimonio**
+const deleteTestimonialValidators = [
+    param('id').isInt().withMessage('El ID del testimonio debe ser un número entero'),
+];
+
+// **Eliminar un testimonio (DELETE)**
 exports.deleteTestimonial = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
 
@@ -62,4 +92,15 @@ exports.deleteTestimonial = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+};
+
+// **Exportar validaciones y funciones**
+module.exports = {
+    createTestimonialValidators,
+    updateTestimonialValidators,
+    deleteTestimonialValidators,
+    createTestimonial: exports.createTestimonial,
+    updateTestimonial: exports.updateTestimonial,
+    deleteTestimonial: exports.deleteTestimonial,
+    getAllTestimonials: exports.getAllTestimonials
 };
