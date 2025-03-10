@@ -4,6 +4,7 @@ const userRoutes = require('./routes/userRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const experienceRoutes = require('./routes/experienceRoutes');
+const galleryRoutes = require('./routes/galleryRoutes');
 require('dotenv').config();  
 
 const configureMiddlewares = require('./middleware/middleware');
@@ -16,6 +17,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/experience', experienceRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 const startServer = async () => {
     try {
