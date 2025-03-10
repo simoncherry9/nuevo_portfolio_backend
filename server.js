@@ -6,6 +6,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const experienceRoutes = require('./routes/experienceRoutes');
 const galleryRoutes = require('./routes/galleryRoutes');
 const proyectsRoutes = require('./routes/proyectsRoutes');
+const skillsRoutes = require('./routes/skillsRoutes');
 require('dotenv').config();  
 
 const configureMiddlewares = require('./middleware/middleware');
@@ -20,6 +21,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/experience', experienceRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/projects', proyectsRoutes);
+app.use('/api/skills', skillsRoutes);
 
 const startServer = async () => {
     try {
