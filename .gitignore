@@ -1,0 +1,31 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+
+# Entornos y configuraciones sensibles
+.env
+config/database.js
+
+# Logs y archivos temporales
+logs/
+*.log
+debug.log
+*.pid
+*.seed
+*.swp
+*.swo
+*.swn
+
+# Directorios de compilación y dependencias
+dist/
+build/
+.DS_Store
+
+# Archivos de configuración de IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
