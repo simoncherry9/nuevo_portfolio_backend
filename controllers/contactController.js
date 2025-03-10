@@ -1,48 +1,76 @@
+const { validationResult, body, param } = require('express-validator');  
 const ContactMessage = require('../models/contact');
 
-// Crear un mensaje de contacto (POST) - Protegida por autenticación
+// **Validaciones para la creación de un mensaje de contacto**
+const createContactMessageValidators = [
+    body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
+    body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
+    body('author').notEmpty().withMessage('El autor es obligatorio').isLength({ max: 50 }).withMessage('El autor no puede tener más de 50 caracteres'),
+];
+
+// **Crear un mensaje de contacto (POST)**
 exports.createContactMessage = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
-        const { name, email, message } = req.body;
+        const { title, content, author } = req.body;
 
         // Crear un nuevo mensaje de contacto
-        const contactMessage = await ContactMessage.create({ name, email, message });
+        const contactMessage = await ContactMessage.create({ title, content, author });
         res.status(201).json({ message: 'Mensaje de contacto creado con éxito', contactMessage });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error al crear el mensaje de contacto:', error);
+        res.status(500).json({ error: 'Hubo un error al crear el mensaje de contacto, inténtalo más tarde.' });
     }
 };
 
-// Obtener todos los mensajes de contacto (GET) - Ruta pública
-exports.getAllContactMessages = async (req, res) => {
-    try {
-        const contactMessages = await ContactMessage.findAll();
-        res.status(200).json(contactMessages);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
+// **Validaciones para la actualización de un mensaje de contacto**
+const updateContactMessageValidators = [
+    param('id').isInt().withMessage('El ID del mensaje debe ser un número entero'),  
+    body('title').optional().isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
+    body('content').optional().isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
+    body('author').optional().isLength({ max: 50 }).withMessage('El autor no puede tener más de 50 caracteres'),
+];
 
-// Actualizar un mensaje de contacto (PUT) - Protegida por autenticación
+// **Actualizar un mensaje de contacto (PUT)**
 exports.updateContactMessage = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
-        const { name, email, message } = req.body;
+        const { title, content, author } = req.body;
 
         const contactMessage = await ContactMessage.findByPk(id);
         if (!contactMessage) {
             return res.status(404).json({ message: 'Mensaje de contacto no encontrado' });
         }
 
-        await contactMessage.update({ name, email, message });
+        await contactMessage.update({ title, content, author });
         res.status(200).json({ message: 'Mensaje de contacto actualizado con éxito', contactMessage });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error al actualizar el mensaje de contacto:', error);
+        res.status(500).json({ error: 'Hubo un error al actualizar el mensaje de contacto, inténtalo más tarde.' });
     }
 };
 
-// Eliminar un mensaje de contacto (DELETE) - Protegida por autenticación
+// **Validaciones para la eliminación de un mensaje de contacto**
+const deleteContactMessageValidators = [
+    param('id').isInt().withMessage('El ID del mensaje debe ser un número entero'),
+];
+
+// **Eliminar un mensaje de contacto (DELETE)**
 exports.deleteContactMessage = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
 
@@ -54,6 +82,29 @@ exports.deleteContactMessage = async (req, res) => {
         await contactMessage.destroy();
         res.status(200).json({ message: 'Mensaje de contacto eliminado con éxito' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error al eliminar el mensaje de contacto:', error);
+        res.status(500).json({ error: 'Hubo un error al eliminar el mensaje de contacto, inténtalo más tarde.' });
     }
+};
+
+// **Obtener todos los mensajes de contacto (GET)**
+exports.getAllContactMessages = async (req, res) => {
+    try {
+        const contactMessages = await ContactMessage.findAll();
+        res.status(200).json(contactMessages);
+    } catch (error) {
+        console.error('Error al obtener los mensajes de contacto:', error);
+        res.status(500).json({ error: 'Hubo un error al obtener los mensajes de contacto, inténtalo más tarde.' });
+    }
+};
+
+// Exportar las validaciones correctamente
+module.exports = {
+    createContactMessageValidators,
+    updateContactMessageValidators,
+    deleteContactMessageValidators,
+    createContactMessage: exports.createContactMessage,
+    updateContactMessage: exports.updateContactMessage,
+    deleteContactMessage: exports.deleteContactMessage,
+    getAllContactMessages: exports.getAllContactMessages
 };
