@@ -14,11 +14,14 @@ require('dotenv').config();
 const configureMiddlewares = require('./middleware/middleware');
 
 const rateLimit = require('express-rate-limit');
+const morgan = require('morgan'); 
 
 const app = express();
 
+app.use(morgan('dev')); 
+
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, 
+    windowMs: 15 * 60 * 1000,
     max: 100, 
     message: 'Demasiadas solicitudes desde esta IP, por favor intente más tarde',
 });
