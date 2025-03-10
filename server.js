@@ -12,21 +12,30 @@ const testimonialsRoutes = require('./routes/testimonialRoutes');
 require('dotenv').config();
 
 const configureMiddlewares = require('./middleware/middleware');
-
 const rateLimit = require('express-rate-limit');
-const morgan = require('morgan'); 
+const morgan = require('morgan');
+const cors = require('cors');  // Importamos cors
 
 const app = express();
 
-app.use(morgan('dev')); 
+// Configurar CORS
+const corsOptions = {
+    origin: 'http://localhost:3001',  // Puedes especificar el origen que desees permitir
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));  // Aplicamos CORS con las opciones configuradas
+
+app.use(morgan('dev'));  // Registros de las solicitudes HTTP
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100, 
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100, // Límite de 100 solicitudes por IP
     message: 'Demasiadas solicitudes desde esta IP, por favor intente más tarde',
 });
 
-app.use(limiter);
+app.use(limiter);  // Aplicamos el límite de solicitudes
 
 configureMiddlewares(app);
 
