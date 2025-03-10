@@ -1,36 +1,56 @@
+const { validationResult, body, param } = require('express-validator');
 const Image = require('../models/gallery');
-const { validationResult } = require('express-validator'); // Para validar los inputs, opcional
 
-// Crear una nueva imagen en la galería (POST)
+// **Validaciones para la creación de una imagen**
+const createImageValidators = [
+    body('url').notEmpty().withMessage('La URL de la imagen es obligatoria').isURL().withMessage('Debe ser una URL válida'),
+    body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede superar los 100 caracteres'),
+    body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede superar los 500 caracteres'),
+];
+
+// **Crear una nueva imagen en la galería (POST)**
 exports.createImage = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { url, title, description } = req.body;
-
-        // Validación de los campos (opcional)
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
         const image = await Image.create({ url, title, description });
         res.status(201).json({ message: 'Imagen creada', image });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error al crear la imagen:', error);
+        res.status(500).json({ error: 'Hubo un error al crear la imagen, inténtalo más tarde.' });
     }
 };
 
-// Obtener todas las imágenes (GET)
+// **Obtener todas las imágenes (GET)**
 exports.getAllImages = async (req, res) => {
     try {
         const images = await Image.findAll();
         res.status(200).json(images);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error al obtener las imágenes:', error);
+        res.status(500).json({ error: 'Hubo un error al obtener las imágenes, inténtalo más tarde.' });
     }
 };
 
-// Actualizar una imagen (PUT)
+// **Validaciones para la actualización de una imagen**
+const updateImageValidators = [
+    param('id').isInt().withMessage('El ID debe ser un número entero'),
+    body('url').optional().isURL().withMessage('Debe ser una URL válida'),
+    body('title').optional().isLength({ max: 100 }).withMessage('El título no puede superar los 100 caracteres'),
+    body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede superar los 500 caracteres'),
+];
+
+// **Actualizar una imagen (PUT)**
 exports.updateImage = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
         const { url, title, description } = req.body;
@@ -43,12 +63,23 @@ exports.updateImage = async (req, res) => {
         await image.update({ url, title, description });
         res.status(200).json({ message: 'Imagen actualizada', image });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error('Error al actualizar la imagen:', error);
+        res.status(500).json({ error: 'Hubo un error al actualizar la imagen, inténtalo más tarde.' });
     }
 };
 
-// Eliminar una imagen (DELETE)
+// **Validaciones para la eliminación de una imagen**
+const deleteImageValidators = [
+    param('id').isInt().withMessage('El ID debe ser un número entero'),
+];
+
+// **Eliminar una imagen (DELETE)**
 exports.deleteImage = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { id } = req.params;
 
@@ -60,6 +91,18 @@ exports.deleteImage = async (req, res) => {
         await image.destroy();
         res.status(200).json({ message: 'Imagen eliminada' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error al eliminar la imagen:', error);
+        res.status(500).json({ error: 'Hubo un error al eliminar la imagen, inténtalo más tarde.' });
     }
+};
+
+// **Exportar validaciones y funciones**
+module.exports = {
+    createImageValidators,
+    updateImageValidators,
+    deleteImageValidators,
+    createImage: exports.createImage,
+    updateImage: exports.updateImage,
+    deleteImage: exports.deleteImage,
+    getAllImages: exports.getAllImages,
 };
