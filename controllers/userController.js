@@ -1,9 +1,7 @@
-// controllers/userController.js
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// Crear un usuario
 exports.createUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -16,7 +14,6 @@ exports.createUser = async (req, res) => {
     }
 };
 
-// Obtener todos los usuarios
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll();
@@ -26,7 +23,6 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
-// Editar un usuario
 exports.updateUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -46,7 +42,6 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-// Eliminar un usuario
 exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -67,7 +62,6 @@ exports.login = async (req, res) => {
     try {
         const { email, username, password } = req.body;
 
-        // Comprobamos si se pasó email o username
         let user;
         if (email) {
             user = await User.findOne({ where: { email } });
@@ -79,21 +73,18 @@ exports.login = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        // Comparar las contraseñas usando bcrypt
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
 
-        // Generar el token JWT
         const token = jwt.sign(
             { userId: user.id }, 
             process.env.JWT_SECRET, 
-            { expiresIn: '1h' } // El token expirará en 1 hora
+            { expiresIn: '1h' } 
         );
 
-        // Devolver el token al usuario
         res.json({
             message: 'Login exitoso',
             token
