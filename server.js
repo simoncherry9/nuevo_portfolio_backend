@@ -1,6 +1,9 @@
 const express = require('express');
 const sequelize = require('./config/database');  
 const userRoutes = require('./routes/userRoutes');  
+const blogRoutes = require('./routes/blogRoutes');
+const contactRoutes = require('./routes/contactRoutes');
+const experienceRoutes = require('./routes/experienceRoutes');
 require('dotenv').config();  
 
 const configureMiddlewares = require('./middleware/middleware');
@@ -10,6 +13,9 @@ const app = express();
 configureMiddlewares(app);
 
 app.use('/api/users', userRoutes); 
+app.use('/api/blog', blogRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/experience', experienceRoutes);
 
 const startServer = async () => {
     try {
