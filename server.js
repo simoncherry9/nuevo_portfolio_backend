@@ -18,9 +18,9 @@ const cors = require('cors');  // Importamos cors
 
 const app = express();
 
-// Configurar CORS
+// Configurar CORS para permitir solicitudes desde el frontend
 const corsOptions = {
-    origin: 'http://localhost:3001',  // Puedes especificar el origen que desees permitir
+    origin: 'http://localhost:3000',  // Ahora el origen es el puerto del frontend (3000)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
