@@ -1,6 +1,6 @@
 const express = require('express');
-const sequelize = require('./config/database');  
-const userRoutes = require('./routes/userRoutes');  
+const sequelize = require('./config/database');
+const userRoutes = require('./routes/userRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const experienceRoutes = require('./routes/experienceRoutes');
@@ -9,15 +9,25 @@ const proyectsRoutes = require('./routes/proyectsRoutes');
 const skillsRoutes = require('./routes/skillsRoutes');
 const sociallinksRoutes = require('./routes/sociallinksRoutes');
 const testimonialsRoutes = require('./routes/testimonialRoutes');
-require('dotenv').config();  
+require('dotenv').config();
 
 const configureMiddlewares = require('./middleware/middleware');
 
+const rateLimit = require('express-rate-limit');
+
 const app = express();
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+    message: 'Demasiadas solicitudes desde esta IP, por favor intente más tarde',
+});
+
+app.use(limiter);
 
 configureMiddlewares(app);
 
-app.use('/api/users', userRoutes); 
+app.use('/api/users', userRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/experience', experienceRoutes);
@@ -29,10 +39,10 @@ app.use('/api/testimonials', testimonialsRoutes);
 
 const startServer = async () => {
     try {
-        await sequelize.authenticate(); 
+        await sequelize.authenticate();
         console.log('✅ Conectado a la base de datos');
 
-        await sequelize.sync({ force: false }); 
+        await sequelize.sync({ force: false });
 
         const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
@@ -40,8 +50,8 @@ const startServer = async () => {
         });
     } catch (error) {
         console.error('❌ Error de conexión:', error);
-        process.exit(1);  
+        process.exit(1);
     }
 };
 
-startServer();  
+startServer();
