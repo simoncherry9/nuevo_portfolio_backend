@@ -7,6 +7,7 @@ const createTestimonialValidators = [
     body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
     body('jobTitle').optional().isLength({ max: 50 }).withMessage('El título del trabajo no puede tener más de 50 caracteres'),
     body('company').optional().isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
 ];
 
 // **Crear un nuevo testimonio (POST)**
@@ -17,8 +18,8 @@ exports.createTestimonial = async (req, res) => {
     }
 
     try {
-        const { name, content, jobTitle, company } = req.body;
-        const testimonial = await Testimonial.create({ name, content, jobTitle, company });
+        const { name, content, jobTitle, company, isActive = true } = req.body; // Default isActive to true
+        const testimonial = await Testimonial.create({ name, content, jobTitle, company, isActive });
         res.status(201).json({ message: 'Testimonio creado', testimonial });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -35,6 +36,16 @@ exports.getAllTestimonials = async (req, res) => {
     }
 };
 
+// **Obtener todos los testimonios activos (GET) - Pública**
+exports.getAllActiveTestimonials = async (req, res) => {
+    try {
+        const testimonials = await Testimonial.findAll({ where: { isActive: true } }); // Filtra por testimonios activos
+        res.status(200).json(testimonials);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // **Validaciones para la actualización de un testimonio**
 const updateTestimonialValidators = [
     param('id').isInt().withMessage('El ID del testimonio debe ser un número entero'),
@@ -42,6 +53,7 @@ const updateTestimonialValidators = [
     body('content').optional().isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
     body('jobTitle').optional().isLength({ max: 50 }).withMessage('El título del trabajo no puede tener más de 50 caracteres'),
     body('company').optional().isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
 ];
 
 // **Actualizar un testimonio (PUT)**
@@ -53,14 +65,14 @@ exports.updateTestimonial = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { name, content, jobTitle, company } = req.body;
+        const { name, content, jobTitle, company, isActive } = req.body;
 
         const testimonial = await Testimonial.findByPk(id);
         if (!testimonial) {
             return res.status(404).json({ message: 'Testimonio no encontrado' });
         }
 
-        await testimonial.update({ name, content, jobTitle, company });
+        await testimonial.update({ name, content, jobTitle, company, isActive });
         res.status(200).json({ message: 'Testimonio actualizado', testimonial });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -102,5 +114,6 @@ module.exports = {
     createTestimonial: exports.createTestimonial,
     updateTestimonial: exports.updateTestimonial,
     deleteTestimonial: exports.deleteTestimonial,
-    getAllTestimonials: exports.getAllTestimonials
+    getAllTestimonials: exports.getAllTestimonials,
+    getAllActiveTestimonials: exports.getAllActiveTestimonials
 };

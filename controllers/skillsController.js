@@ -1,4 +1,4 @@
-const { validationResult, body, param } = require('express-validator');  // Para validación, si lo necesitas
+const { validationResult, body, param } = require('express-validator');
 const Skill = require('../models/skills');
 
 // **Validaciones para la creación de una habilidad**
@@ -6,6 +6,7 @@ const createSkillValidators = [
     body('name').notEmpty().withMessage('El nombre de la habilidad es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('proficiency').notEmpty().withMessage('El nivel de habilidad es obligatorio').isInt({ min: 1, max: 5 }).withMessage('El nivel de habilidad debe ser un número entre 1 y 5'),
     body('category').notEmpty().withMessage('La categoría es obligatoria').isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
 ];
 
 // **Crear una nueva habilidad (POST)**
@@ -16,12 +17,21 @@ exports.createSkill = async (req, res) => {
     }
 
     try {
-        const { name, proficiency, category } = req.body;
-
-        const skill = await Skill.create({ name, proficiency, category });
+        const { name, proficiency, category, isActive = true } = req.body; // Default isActive to true
+        const skill = await Skill.create({ name, proficiency, category, isActive });
         res.status(201).json({ message: 'Habilidad creada', skill });
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+};
+
+// **Obtener todas las habilidades activas (GET) - Pública**
+exports.getAllActiveSkills = async (req, res) => {
+    try {
+        const skills = await Skill.findAll({ where: { isActive: true } }); // Filtra por habilidades activas
+        res.status(200).json(skills);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 
@@ -41,6 +51,7 @@ const updateSkillValidators = [
     body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('proficiency').optional().isInt({ min: 1, max: 5 }).withMessage('El nivel de habilidad debe ser un número entre 1 y 5'),
     body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
 ];
 
 // **Actualizar una habilidad (PUT)**
@@ -52,14 +63,14 @@ exports.updateSkill = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { name, proficiency, category } = req.body;
+        const { name, proficiency, category, isActive } = req.body;
 
         const skill = await Skill.findByPk(id);
         if (!skill) {
             return res.status(404).json({ message: 'Habilidad no encontrada' });
         }
 
-        await skill.update({ name, proficiency, category });
+        await skill.update({ name, proficiency, category, isActive });
         res.status(200).json({ message: 'Habilidad actualizada', skill });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -101,5 +112,6 @@ module.exports = {
     createSkill: exports.createSkill,
     updateSkill: exports.updateSkill,
     deleteSkill: exports.deleteSkill,
-    getAllSkills: exports.getAllSkills
+    getAllSkills: exports.getAllSkills,
+    getAllActiveSkills: exports.getAllActiveSkills
 };

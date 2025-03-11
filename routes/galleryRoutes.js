@@ -9,6 +9,9 @@ const { createImageValidators, updateImageValidators, deleteImageValidators } = 
 // **Obtener todas las imágenes (GET) - Ruta pública**
 router.get('/', galleryController.getAllImages);
 
+// **Obtener solo las imágenes activas (GET) - Ruta pública**
+router.get('/active', galleryController.getActiveImages);  // Aquí está la ruta para obtener solo las imágenes activas
+
 // **Crear una nueva imagen (POST) - Protegida por autenticación y validación de entrada**
 router.post('/', authMiddleware, createImageValidators, galleryController.createImage);
 

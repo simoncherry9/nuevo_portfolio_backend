@@ -18,6 +18,11 @@ const Skill = sequelize.define('Skill', {
     category: {
         type: DataTypes.STRING, // Como "Frontend", "Backend", "DevOps", etc.
         allowNull: true
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN, // Estado de la habilidad
+        defaultValue: true, // Se asume que la habilidad está activa por defecto
+        allowNull: false
     }
 });
 

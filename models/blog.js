@@ -23,6 +23,11 @@ const BlogPost = sequelize.define('BlogPost', {
     author: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true // Por defecto, los blogs están activos
     }
 });
 

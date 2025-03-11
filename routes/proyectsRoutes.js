@@ -9,6 +9,9 @@ const { createProjectValidators, updateProjectValidators, deleteProjectValidator
 // **Obtener todos los proyectos (GET) - Ruta pública**
 router.get('/', projectsController.getAllProjects);
 
+// **Obtener solo proyectos activos (GET) - Ruta pública**
+router.get('/active', projectsController.getActiveProjects); // Ruta para obtener solo proyectos activos
+
 // **Crear un nuevo proyecto (POST) - Protegida por autenticación y validación de entrada**
 router.post('/', authMiddleware, createProjectValidators, projectsController.createProject);
 

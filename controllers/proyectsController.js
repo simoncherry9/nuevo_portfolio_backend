@@ -6,7 +6,8 @@ const createProjectValidators = [
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
     body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
     body('technologies').optional().isArray().withMessage('Las tecnologías deben ser un array'),
-    body('link').optional().isURL().withMessage('El enlace debe ser una URL válida')
+    body('link').optional().isURL().withMessage('El enlace debe ser una URL válida'),
+    body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano')
 ];
 
 // **Crear un nuevo proyecto (POST)**
@@ -17,8 +18,8 @@ exports.createProject = async (req, res) => {
     }
 
     try {
-        const { title, description, technologies, link } = req.body;
-        const project = await Project.create({ title, description, technologies, link });
+        const { title, description, technologies, link, isActive } = req.body;
+        const project = await Project.create({ title, description, technologies, link, isActive });
         res.status(201).json({ message: 'Proyecto creado', project });
     } catch (error) {
         console.error('Error al crear el proyecto:', error);
@@ -37,13 +38,25 @@ exports.getAllProjects = async (req, res) => {
     }
 };
 
+// **Obtener solo proyectos activos (GET)**
+exports.getActiveProjects = async (req, res) => {
+    try {
+        const projects = await Project.findAll({ where: { isActive: true } });
+        res.status(200).json(projects);
+    } catch (error) {
+        console.error('Error al obtener los proyectos activos:', error);
+        res.status(500).json({ error: 'Hubo un error al obtener los proyectos activos, inténtalo más tarde.' });
+    }
+};
+
 // **Validaciones para la actualización de un proyecto**
 const updateProjectValidators = [
     param('id').isInt().withMessage('El ID del proyecto debe ser un número entero'),
     body('title').optional().isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
     body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
     body('technologies').optional().isArray().withMessage('Las tecnologías deben ser un array'),
-    body('link').optional().isURL().withMessage('El enlace debe ser una URL válida')
+    body('link').optional().isURL().withMessage('El enlace debe ser una URL válida'),
+    body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano')
 ];
 
 // **Actualizar un proyecto (PUT)**
@@ -55,14 +68,14 @@ exports.updateProject = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { title, description, technologies, link } = req.body;
+        const { title, description, technologies, link, isActive } = req.body;
 
         const project = await Project.findByPk(id);
         if (!project) {
             return res.status(404).json({ message: 'Proyecto no encontrado' });
         }
 
-        await project.update({ title, description, technologies, link });
+        await project.update({ title, description, technologies, link, isActive });
         res.status(200).json({ message: 'Proyecto actualizado', project });
     } catch (error) {
         console.error('Error al actualizar el proyecto:', error);
@@ -106,5 +119,6 @@ module.exports = {
     createProject: exports.createProject,
     getAllProjects: exports.getAllProjects,
     updateProject: exports.updateProject,
-    deleteProject: exports.deleteProject
+    deleteProject: exports.deleteProject,
+    getActiveProjects: exports.getActiveProjects
 };

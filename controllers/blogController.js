@@ -1,11 +1,11 @@
-const { validationResult, body, param } = require('express-validator');  
+const { validationResult, body, param } = require('express-validator');
 const BlogPost = require('../models/blog');
 
 // **Validaciones para la creación de un blog**
 const createBlogPostValidators = [
-    body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
-    body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
-    body('author').notEmpty().withMessage('El autor es obligatorio').isLength({ max: 50 }).withMessage('El autor no puede tener más de 50 caracteres'),
+    body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
+    body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('Mínimo 10 caracteres'),
+    body('author').notEmpty().withMessage('El autor es obligatorio').isLength({ max: 50 }).withMessage('Máximo 50 caracteres'),
 ];
 
 // **Crear un blog (POST)**
@@ -17,8 +17,6 @@ exports.createBlogPost = async (req, res) => {
 
     try {
         const { title, content, author } = req.body;
-
-        // Crear un nuevo blog post
         const blogPost = await BlogPost.create({ title, content, author });
         res.status(201).json({ message: 'Blog creado con éxito', blogPost });
     } catch (error) {
@@ -29,10 +27,10 @@ exports.createBlogPost = async (req, res) => {
 
 // **Validaciones para la actualización de un blog**
 const updateBlogPostValidators = [
-    param('id').isInt().withMessage('El ID del blog debe ser un número entero'),  
-    body('title').optional().isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
-    body('content').optional().isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
-    body('author').optional().isLength({ max: 50 }).withMessage('El autor no puede tener más de 50 caracteres'),
+    param('id').isInt().withMessage('El ID debe ser un número entero'),
+    body('title').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
+    body('content').optional().isLength({ min: 10 }).withMessage('Mínimo 10 caracteres'),
+    body('author').optional().isLength({ max: 50 }).withMessage('Máximo 50 caracteres'),
 ];
 
 // **Actualizar un blog post (PUT)**
@@ -51,7 +49,12 @@ exports.updateBlogPost = async (req, res) => {
             return res.status(404).json({ message: 'Blog no encontrado' });
         }
 
-        await blogPost.update({ title, content, author });
+        await blogPost.update({ 
+            title: title || blogPost.title, 
+            content: content || blogPost.content, 
+            author: author || blogPost.author 
+        });
+
         res.status(200).json({ message: 'Blog actualizado con éxito', blogPost });
     } catch (error) {
         console.error('Error al actualizar el blog:', error);
@@ -61,7 +64,7 @@ exports.updateBlogPost = async (req, res) => {
 
 // **Validaciones para la eliminación de un blog**
 const deleteBlogPostValidators = [
-    param('id').isInt().withMessage('El ID del blog debe ser un número entero'),
+    param('id').isInt().withMessage('El ID debe ser un número entero'),
 ];
 
 // **Eliminar un blog post (DELETE)**
@@ -90,7 +93,7 @@ exports.deleteBlogPost = async (req, res) => {
 // **Obtener todos los blog posts (GET)**
 exports.getAllBlogPosts = async (req, res) => {
     try {
-        const blogPosts = await BlogPost.findAll();
+        const blogPosts = await BlogPost.findAll({ where: { isActive: true } });
         res.status(200).json(blogPosts);
     } catch (error) {
         console.error('Error al obtener los blogs:', error);
@@ -98,7 +101,21 @@ exports.getAllBlogPosts = async (req, res) => {
     }
 };
 
-// Exportar las validaciones correctamente
+// **Habilitar o deshabilitar todos los blogs (PUT)**
+exports.toggleBlogVisibility = async (req, res) => {
+    try {
+        const { isActive } = req.body;
+
+        await BlogPost.update({ isActive }, { where: {} });
+
+        res.status(200).json({ message: `Los blogs fueron ${isActive ? 'habilitados' : 'deshabilitados'}` });
+    } catch (error) {
+        console.error('Error al cambiar visibilidad:', error);
+        res.status(500).json({ error: 'Hubo un error, inténtalo más tarde.' });
+    }
+};
+
+// Exportar validaciones y controladores
 module.exports = {
     createBlogPostValidators,
     updateBlogPostValidators,
@@ -106,5 +123,6 @@ module.exports = {
     createBlogPost: exports.createBlogPost,
     updateBlogPost: exports.updateBlogPost,
     deleteBlogPost: exports.deleteBlogPost,
-    getAllBlogPosts: exports.getAllBlogPosts
+    getAllBlogPosts: exports.getAllBlogPosts,
+    toggleBlogVisibility: exports.toggleBlogVisibility,
 };

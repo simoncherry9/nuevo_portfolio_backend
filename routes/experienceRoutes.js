@@ -3,19 +3,21 @@ const router = express.Router();
 const experienceController = require('../controllers/experienceController');
 const authMiddleware = require('../middleware/authMiddleware');  // Middleware de autenticación
 
-// **Importar las validaciones desde el controlador**
-const { createExperienceValidators, updateExperienceValidators, deleteExperienceValidators } = require('../controllers/experienceController');
+const { createExperienceValidators, updateExperienceValidators, deleteExperienceValidators } = experienceController;
 
 // **Obtener todas las experiencias laborales (GET) - Ruta pública**
 router.get('/', experienceController.getAllExperiences);
 
-// **Crear una nueva experiencia laboral (POST) - Protegida por autenticación y validación de entrada**
+// **Obtener experiencias laborales activas (GET) - Ruta pública**
+router.get('/active', experienceController.getActiveExperiences);
+
+// **Crear una nueva experiencia laboral (POST) - Protegida**
 router.post('/', authMiddleware, createExperienceValidators, experienceController.createExperience);
 
-// **Editar una experiencia laboral (PUT) - Protegida por autenticación y validación de entrada**
+// **Editar una experiencia laboral (PUT) - Protegida**
 router.put('/:id', authMiddleware, updateExperienceValidators, experienceController.updateExperience);
 
-// **Eliminar una experiencia laboral (DELETE) - Protegida por autenticación y validación de entrada**
+// **Eliminar una experiencia laboral (DELETE) - Protegida**
 router.delete('/:id', authMiddleware, deleteExperienceValidators, experienceController.deleteExperience);
 
 module.exports = router;

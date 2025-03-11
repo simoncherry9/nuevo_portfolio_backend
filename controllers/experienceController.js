@@ -1,4 +1,4 @@
-const { validationResult, body, param } = require('express-validator');  
+const { validationResult, body, param } = require('express-validator');
 const Experience = require('../models/experience');
 
 // **Validaciones para la creación de una experiencia laboral**
@@ -11,7 +11,7 @@ const createExperienceValidators = [
 ];
 
 // **Crear una nueva experiencia laboral (POST)**
-exports.createExperience = async (req, res) => {
+const createExperience = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -33,13 +33,28 @@ exports.createExperience = async (req, res) => {
 };
 
 // **Obtener todas las experiencias laborales (GET)**
-exports.getAllExperiences = async (req, res) => {
+const getAllExperiences = async (req, res) => {
     try {
         const experiences = await Experience.findAll();
         res.status(200).json(experiences);
     } catch (error) {
         console.error('Error al obtener las experiencias laborales:', error);
         res.status(500).json({ error: 'Hubo un error al obtener las experiencias laborales, inténtalo más tarde.' });
+    }
+};
+
+// **Obtener experiencias laborales activas (GET)**
+const getActiveExperiences = async (req, res) => {
+    try {
+        const experiences = await Experience.findAll({
+            where: {
+                endDate: null  // Solo experiencias activas (sin fecha de finalización)
+            }
+        });
+        res.status(200).json(experiences);
+    } catch (error) {
+        console.error('Error al obtener las experiencias activas:', error);
+        res.status(500).json({ error: 'Hubo un error al obtener las experiencias activas, inténtalo más tarde.' });
     }
 };
 
@@ -54,7 +69,7 @@ const updateExperienceValidators = [
 ];
 
 // **Actualizar una experiencia laboral (PUT)**
-exports.updateExperience = async (req, res) => {
+const updateExperience = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -87,7 +102,7 @@ const deleteExperienceValidators = [
 ];
 
 // **Eliminar una experiencia laboral (DELETE)**
-exports.deleteExperience = async (req, res) => {
+const deleteExperience = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -109,13 +124,14 @@ exports.deleteExperience = async (req, res) => {
     }
 };
 
-// **Exportar validaciones y funciones**
+// **Exportar funciones y validaciones**
 module.exports = {
     createExperienceValidators,
     updateExperienceValidators,
     deleteExperienceValidators,
-    createExperience: exports.createExperience,
-    updateExperience: exports.updateExperience,
-    deleteExperience: exports.deleteExperience,
-    getAllExperiences: exports.getAllExperiences
+    createExperience,
+    updateExperience,
+    deleteExperience,
+    getAllExperiences,
+    getActiveExperiences
 };

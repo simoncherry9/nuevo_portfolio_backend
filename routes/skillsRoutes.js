@@ -4,6 +4,9 @@ const skillsController = require('../controllers/skillsController');
 const authMiddleware = require('../middleware/authMiddleware');
 const { createSkillValidators, updateSkillValidators, deleteSkillValidators } = require('../controllers/skillsController');  // Importar las validaciones
 
+// **Obtener todas las habilidades activas (GET)**
+router.get('/active', skillsController.getAllActiveSkills);
+
 // **Obtener todas las habilidades (GET) - Pública**
 router.get('/', skillsController.getAllSkills);
 

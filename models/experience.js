@@ -9,23 +9,28 @@ const Experience = sequelize.define('Experience', {
     },
     title: {
         type: DataTypes.STRING,
-        allowNull: false, // Ejemplo: "Desarrollador Web", "Analista de Seguridad"
+        allowNull: false
     },
     company: {
         type: DataTypes.STRING,
-        allowNull: false, // Nombre de la empresa o proyecto
+        allowNull: false
     },
     startDate: {
         type: DataTypes.DATE,
-        allowNull: false, // Fecha de inicio del puesto o proyecto
+        allowNull: false
     },
     endDate: {
         type: DataTypes.DATE,
-        allowNull: true, // Fecha de finalización (puede ser nula si sigue activo)
+        allowNull: true
     },
     description: {
         type: DataTypes.TEXT,
-        allowNull: true, // Descripción detallada de lo que hiciste en esa posición o proyecto
+        allowNull: true
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     },
     createdAt: {
         type: DataTypes.DATE,

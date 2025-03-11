@@ -23,6 +23,10 @@ const Project = sequelize.define('Project', {
         type: DataTypes.STRING, // Enlace al proyecto
         allowNull: true
     },
+    isActive: {
+        type: DataTypes.BOOLEAN, // Indicador de si el proyecto está activo
+        defaultValue: true, // Por defecto, un proyecto es activo
+    },
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,

@@ -18,6 +18,11 @@ const Image = sequelize.define('Image', {
     description: {
         type: DataTypes.TEXT,
         allowNull: true
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true, // Asegura que el valor por defecto sea 'true'
+        allowNull: true
     }
 });
 
