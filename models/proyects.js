@@ -16,16 +16,16 @@ const Project = sequelize.define('Project', {
         allowNull: false
     },
     technologies: {
-        type: DataTypes.STRING, // Lista de tecnologías usadas en el proyecto
+        type: DataTypes.STRING, 
         allowNull: false
     },
     link: {
-        type: DataTypes.STRING, // Enlace al proyecto
+        type: DataTypes.STRING, 
         allowNull: true
     },
     isActive: {
-        type: DataTypes.BOOLEAN, // Indicador de si el proyecto está activo
-        defaultValue: true, // Por defecto, un proyecto es activo
+        type: DataTypes.BOOLEAN, 
+        defaultValue: true, 
     },
     createdAt: {
         type: DataTypes.DATE,

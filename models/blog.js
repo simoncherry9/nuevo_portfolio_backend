@@ -27,7 +27,7 @@ const BlogPost = sequelize.define('BlogPost', {
     isActive: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: true // Por defecto, los blogs están activos
+        defaultValue: true 
     }
 });
 

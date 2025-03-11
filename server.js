@@ -14,29 +14,27 @@ require('dotenv').config();
 const configureMiddlewares = require('./middleware/middleware');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
-const cors = require('cors');  // Importamos cors
+const cors = require('cors');  
 
 const app = express();
 
-// Configurar CORS para permitir solicitudes desde el frontend
 const corsOptions = {
-    origin: 'http://localhost:3000',  // Ahora el origen es el puerto del frontend (3000)
+    origin: 'http://localhost:3000',  
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use(cors(corsOptions));  // Aplicamos CORS con las opciones configuradas
+app.use(cors(corsOptions)); 
 
-app.use(morgan('dev'));  // Registros de las solicitudes HTTP
+app.use(morgan('dev')); 
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100, // Límite de 100 solicitudes por IP
+    windowMs: 15 * 60 * 1000, 
+    max: 100,
     message: 'Demasiadas solicitudes desde esta IP, por favor intente más tarde',
 });
 
-app.use(limiter);  // Aplicamos el límite de solicitudes
-
+app.use(limiter); 
 configureMiddlewares(app);
 
 app.use('/api/users', userRoutes);

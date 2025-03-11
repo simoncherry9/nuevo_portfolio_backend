@@ -1,16 +1,16 @@
-const { validationResult, body, param } = require('express-validator'); // Validación
+const { validationResult, body, param } = require('express-validator'); 
 const Testimonial = require('../models/testimonials');
 
-// **Validaciones para la creación de un testimonio**
+
 const createTestimonialValidators = [
     body('name').notEmpty().withMessage('El nombre es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
     body('jobTitle').optional().isLength({ max: 50 }).withMessage('El título del trabajo no puede tener más de 50 caracteres'),
     body('company').optional().isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
-    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') 
 ];
 
-// **Crear un nuevo testimonio (POST)**
+
 exports.createTestimonial = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -18,7 +18,7 @@ exports.createTestimonial = async (req, res) => {
     }
 
     try {
-        const { name, content, jobTitle, company, isActive = true } = req.body; // Default isActive to true
+        const { name, content, jobTitle, company, isActive = true } = req.body; 
         const testimonial = await Testimonial.create({ name, content, jobTitle, company, isActive });
         res.status(201).json({ message: 'Testimonio creado', testimonial });
     } catch (error) {
@@ -26,7 +26,7 @@ exports.createTestimonial = async (req, res) => {
     }
 };
 
-// **Obtener todos los testimonios (GET) - Pública**
+
 exports.getAllTestimonials = async (req, res) => {
     try {
         const testimonials = await Testimonial.findAll();
@@ -36,27 +36,27 @@ exports.getAllTestimonials = async (req, res) => {
     }
 };
 
-// **Obtener todos los testimonios activos (GET) - Pública**
+
 exports.getAllActiveTestimonials = async (req, res) => {
     try {
-        const testimonials = await Testimonial.findAll({ where: { isActive: true } }); // Filtra por testimonios activos
+        const testimonials = await Testimonial.findAll({ where: { isActive: true } }); 
         res.status(200).json(testimonials);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// **Validaciones para la actualización de un testimonio**
+
 const updateTestimonialValidators = [
     param('id').isInt().withMessage('El ID del testimonio debe ser un número entero'),
     body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('content').optional().isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
     body('jobTitle').optional().isLength({ max: 50 }).withMessage('El título del trabajo no puede tener más de 50 caracteres'),
     body('company').optional().isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
-    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') 
 ];
 
-// **Actualizar un testimonio (PUT)**
+
 exports.updateTestimonial = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -79,12 +79,12 @@ exports.updateTestimonial = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de un testimonio**
+
 const deleteTestimonialValidators = [
     param('id').isInt().withMessage('El ID del testimonio debe ser un número entero'),
 ];
 
-// **Eliminar un testimonio (DELETE)**
+
 exports.deleteTestimonial = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -106,7 +106,7 @@ exports.deleteTestimonial = async (req, res) => {
     }
 };
 
-// **Exportar validaciones y funciones**
+
 module.exports = {
     createTestimonialValidators,
     updateTestimonialValidators,

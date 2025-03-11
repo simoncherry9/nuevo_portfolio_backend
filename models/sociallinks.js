@@ -9,18 +9,18 @@ const SocialLink = sequelize.define('SocialLink', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false, // Ejemplo: "LinkedIn", "GitHub", "Twitter"
+        allowNull: false, 
     },
     url: {
         type: DataTypes.STRING,
-        allowNull: false, // Enlace completo al perfil, ejemplo: https://www.linkedin.com/in/tu-nombre
+        allowNull: false, 
     },
     icon: {
-        type: DataTypes.STRING, // Aquí puedes guardar un nombre de icono o una URL al ícono, por ejemplo, "linkedin", "github"
+        type: DataTypes.STRING, 
         allowNull: true
     },
     category: {
-        type: DataTypes.STRING, // Categoría de la red, como "Profesional", "Social", etc.
+        type: DataTypes.STRING, 
         allowNull: true
     },
     createdAt: {

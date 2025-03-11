@@ -1,7 +1,7 @@
 const { validationResult, body, param } = require('express-validator');
 const Image = require('../models/gallery');
 
-// **Validaciones para la creación de una imagen**
+
 const createImageValidators = [
     body('url').notEmpty().withMessage('La URL de la imagen es obligatoria').isURL().withMessage('Debe ser una URL válida'),
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede superar los 100 caracteres'),
@@ -9,7 +9,7 @@ const createImageValidators = [
     body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano')
 ];
 
-// **Crear una nueva imagen en la galería (POST)**
+
 exports.createImage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -26,7 +26,7 @@ exports.createImage = async (req, res) => {
     }
 };
 
-// **Obtener todas las imágenes (GET)**
+
 exports.getAllImages = async (req, res) => {
     try {
         const images = await Image.findAll();
@@ -37,7 +37,7 @@ exports.getAllImages = async (req, res) => {
     }
 };
 
-// **Obtener solo imágenes activas (GET)**
+
 exports.getActiveImages = async (req, res) => {
     try {
         const images = await Image.findAll({ where: { isActive: true } });
@@ -48,7 +48,7 @@ exports.getActiveImages = async (req, res) => {
     }
 };
 
-// **Validaciones para la actualización de una imagen**
+
 const updateImageValidators = [
     param('id').isInt().withMessage('El ID debe ser un número entero'),
     body('url').optional().isURL().withMessage('Debe ser una URL válida'),
@@ -57,7 +57,7 @@ const updateImageValidators = [
     body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano')
 ];
 
-// **Actualizar una imagen (PUT)**
+
 exports.updateImage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -81,12 +81,12 @@ exports.updateImage = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de una imagen**
+
 const deleteImageValidators = [
     param('id').isInt().withMessage('El ID debe ser un número entero'),
 ];
 
-// **Eliminar una imagen (DELETE)**
+
 exports.deleteImage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -108,7 +108,7 @@ exports.deleteImage = async (req, res) => {
     }
 };
 
-// **Exportar validaciones y funciones**
+
 module.exports = {
     createImageValidators,
     updateImageValidators,

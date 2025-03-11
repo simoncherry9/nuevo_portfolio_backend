@@ -1,14 +1,14 @@
 const { validationResult, body, param } = require('express-validator');  
 const ContactMessage = require('../models/contact');
 
-// **Validaciones para la creación de un mensaje de contacto**
+
 const createContactMessageValidators = [
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
     body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('El contenido debe tener al menos 10 caracteres'),
     body('author').notEmpty().withMessage('El autor es obligatorio').isLength({ max: 50 }).withMessage('El autor no puede tener más de 50 caracteres'),
 ];
 
-// **Crear un mensaje de contacto (POST)**
+
 exports.createContactMessage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -18,7 +18,7 @@ exports.createContactMessage = async (req, res) => {
     try {
         const { title, content, author } = req.body;
 
-        // Crear un nuevo mensaje de contacto
+        
         const contactMessage = await ContactMessage.create({ title, content, author });
         res.status(201).json({ message: 'Mensaje de contacto creado con éxito', contactMessage });
     } catch (error) {
@@ -27,7 +27,7 @@ exports.createContactMessage = async (req, res) => {
     }
 };
 
-// **Validaciones para la actualización de un mensaje de contacto**
+
 const updateContactMessageValidators = [
     param('id').isInt().withMessage('El ID del mensaje debe ser un número entero'),  
     body('title').optional().isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
@@ -35,7 +35,7 @@ const updateContactMessageValidators = [
     body('author').optional().isLength({ max: 50 }).withMessage('El autor no puede tener más de 50 caracteres'),
 ];
 
-// **Actualizar un mensaje de contacto (PUT)**
+
 exports.updateContactMessage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -59,12 +59,12 @@ exports.updateContactMessage = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de un mensaje de contacto**
+
 const deleteContactMessageValidators = [
     param('id').isInt().withMessage('El ID del mensaje debe ser un número entero'),
 ];
 
-// **Eliminar un mensaje de contacto (DELETE)**
+
 exports.deleteContactMessage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -87,7 +87,7 @@ exports.deleteContactMessage = async (req, res) => {
     }
 };
 
-// **Obtener todos los mensajes de contacto (GET)**
+
 exports.getAllContactMessages = async (req, res) => {
     try {
         const contactMessages = await ContactMessage.findAll();
@@ -98,7 +98,7 @@ exports.getAllContactMessages = async (req, res) => {
     }
 };
 
-// Exportar las validaciones correctamente
+
 module.exports = {
     createContactMessageValidators,
     updateContactMessageValidators,

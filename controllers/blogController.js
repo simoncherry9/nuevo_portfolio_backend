@@ -1,14 +1,14 @@
 const { validationResult, body, param } = require('express-validator');
 const BlogPost = require('../models/blog');
 
-// **Validaciones para la creación de un blog**
+
 const createBlogPostValidators = [
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('Mínimo 10 caracteres'),
     body('author').notEmpty().withMessage('El autor es obligatorio').isLength({ max: 50 }).withMessage('Máximo 50 caracteres'),
 ];
 
-// **Crear un blog (POST)**
+
 exports.createBlogPost = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -25,7 +25,6 @@ exports.createBlogPost = async (req, res) => {
     }
 };
 
-// **Validaciones para la actualización de un blog**
 const updateBlogPostValidators = [
     param('id').isInt().withMessage('El ID debe ser un número entero'),
     body('title').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
@@ -33,7 +32,6 @@ const updateBlogPostValidators = [
     body('author').optional().isLength({ max: 50 }).withMessage('Máximo 50 caracteres'),
 ];
 
-// **Actualizar un blog post (PUT)**
 exports.updateBlogPost = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -62,12 +60,12 @@ exports.updateBlogPost = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de un blog**
+
 const deleteBlogPostValidators = [
     param('id').isInt().withMessage('El ID debe ser un número entero'),
 ];
 
-// **Eliminar un blog post (DELETE)**
+
 exports.deleteBlogPost = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -90,7 +88,7 @@ exports.deleteBlogPost = async (req, res) => {
     }
 };
 
-// **Obtener todos los blog posts (GET)**
+
 exports.getAllBlogPosts = async (req, res) => {
     try {
         const blogPosts = await BlogPost.findAll({ where: { isActive: true } });
@@ -101,7 +99,7 @@ exports.getAllBlogPosts = async (req, res) => {
     }
 };
 
-// **Habilitar o deshabilitar todos los blogs (PUT)**
+
 exports.toggleBlogVisibility = async (req, res) => {
     try {
         const { isActive } = req.body;
@@ -115,7 +113,7 @@ exports.toggleBlogVisibility = async (req, res) => {
     }
 };
 
-// Exportar validaciones y controladores
+
 module.exports = {
     createBlogPostValidators,
     updateBlogPostValidators,

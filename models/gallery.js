@@ -21,7 +21,7 @@ const Image = sequelize.define('Image', {
     },
     isActive: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true, // Asegura que el valor por defecto sea 'true'
+        defaultValue: true, 
         allowNull: true
     }
 });

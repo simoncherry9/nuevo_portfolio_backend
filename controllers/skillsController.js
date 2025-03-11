@@ -1,15 +1,15 @@
 const { validationResult, body, param } = require('express-validator');
 const Skill = require('../models/skills');
 
-// **Validaciones para la creación de una habilidad**
+
 const createSkillValidators = [
     body('name').notEmpty().withMessage('El nombre de la habilidad es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('proficiency').notEmpty().withMessage('El nivel de habilidad es obligatorio').isInt({ min: 1, max: 5 }).withMessage('El nivel de habilidad debe ser un número entre 1 y 5'),
     body('category').notEmpty().withMessage('La categoría es obligatoria').isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
-    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') 
 ];
 
-// **Crear una nueva habilidad (POST)**
+
 exports.createSkill = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -17,7 +17,7 @@ exports.createSkill = async (req, res) => {
     }
 
     try {
-        const { name, proficiency, category, isActive = true } = req.body; // Default isActive to true
+        const { name, proficiency, category, isActive = true } = req.body; 
         const skill = await Skill.create({ name, proficiency, category, isActive });
         res.status(201).json({ message: 'Habilidad creada', skill });
     } catch (error) {
@@ -25,17 +25,17 @@ exports.createSkill = async (req, res) => {
     }
 };
 
-// **Obtener todas las habilidades activas (GET) - Pública**
+
 exports.getAllActiveSkills = async (req, res) => {
     try {
-        const skills = await Skill.findAll({ where: { isActive: true } }); // Filtra por habilidades activas
+        const skills = await Skill.findAll({ where: { isActive: true } }); 
         res.status(200).json(skills);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// **Obtener todas las habilidades (GET) - Pública**
+
 exports.getAllSkills = async (req, res) => {
     try {
         const skills = await Skill.findAll();
@@ -45,16 +45,16 @@ exports.getAllSkills = async (req, res) => {
     }
 };
 
-// **Validaciones para la actualización de una habilidad**
+
 const updateSkillValidators = [
     param('id').isInt().withMessage('El ID de la habilidad debe ser un número entero'),
     body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('proficiency').optional().isInt({ min: 1, max: 5 }).withMessage('El nivel de habilidad debe ser un número entre 1 y 5'),
     body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
-    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') // Validación para isActive
+    body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') 
 ];
 
-// **Actualizar una habilidad (PUT)**
+
 exports.updateSkill = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -77,12 +77,12 @@ exports.updateSkill = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de una habilidad**
+
 const deleteSkillValidators = [
     param('id').isInt().withMessage('El ID de la habilidad debe ser un número entero'),
 ];
 
-// **Eliminar una habilidad (DELETE)**
+
 exports.deleteSkill = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -104,7 +104,7 @@ exports.deleteSkill = async (req, res) => {
     }
 };
 
-// **Exportar validaciones y funciones**
+
 module.exports = {
     createSkillValidators,
     updateSkillValidators,

@@ -1,7 +1,7 @@
 const { validationResult, body, param } = require('express-validator');
 const Experience = require('../models/experience');
 
-// **Validaciones para la creación de una experiencia laboral**
+
 const createExperienceValidators = [
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
     body('company').notEmpty().withMessage('El nombre de la empresa es obligatorio').isLength({ max: 100 }).withMessage('El nombre de la empresa no puede tener más de 100 caracteres'),
@@ -10,7 +10,7 @@ const createExperienceValidators = [
     body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
 ];
 
-// **Crear una nueva experiencia laboral (POST)**
+
 const createExperience = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -32,7 +32,7 @@ const createExperience = async (req, res) => {
     }
 };
 
-// **Obtener todas las experiencias laborales (GET)**
+
 const getAllExperiences = async (req, res) => {
     try {
         const experiences = await Experience.findAll();
@@ -43,12 +43,12 @@ const getAllExperiences = async (req, res) => {
     }
 };
 
-// **Obtener experiencias laborales activas (GET)**
+
 const getActiveExperiences = async (req, res) => {
     try {
         const experiences = await Experience.findAll({
             where: {
-                endDate: null  // Solo experiencias activas (sin fecha de finalización)
+                endDate: null  
             }
         });
         res.status(200).json(experiences);
@@ -58,7 +58,7 @@ const getActiveExperiences = async (req, res) => {
     }
 };
 
-// **Validaciones para la actualización de una experiencia laboral**
+
 const updateExperienceValidators = [
     param('id').isInt().withMessage('El ID de la experiencia debe ser un número entero'),
     body('title').optional().isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
@@ -68,7 +68,7 @@ const updateExperienceValidators = [
     body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
 ];
 
-// **Actualizar una experiencia laboral (PUT)**
+
 const updateExperience = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -96,12 +96,12 @@ const updateExperience = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de una experiencia laboral**
+
 const deleteExperienceValidators = [
     param('id').isInt().withMessage('El ID de la experiencia debe ser un número entero'),
 ];
 
-// **Eliminar una experiencia laboral (DELETE)**
+
 const deleteExperience = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -124,7 +124,7 @@ const deleteExperience = async (req, res) => {
     }
 };
 
-// **Exportar funciones y validaciones**
+
 module.exports = {
     createExperienceValidators,
     updateExperienceValidators,

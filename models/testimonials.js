@@ -16,16 +16,16 @@ const Testimonial = sequelize.define('Testimonial', {
         allowNull: false
     },
     jobTitle: {
-        type: DataTypes.STRING, // Ejemplo: "CEO de XYZ"
+        type: DataTypes.STRING, 
         allowNull: true
     },
     company: {
-        type: DataTypes.STRING, // Empresa o lugar de trabajo
+        type: DataTypes.STRING, 
         allowNull: true
     },
     isActive: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true // El testimonio estará activo por defecto
+        defaultValue: true 
     }
 });
 

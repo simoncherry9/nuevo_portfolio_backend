@@ -1,7 +1,7 @@
-const { validationResult, body, param } = require('express-validator'); // Validación
+const { validationResult, body, param } = require('express-validator'); 
 const SocialLink = require('../models/sociallinks');
 
-// **Validaciones para la creación de un enlace social**
+
 const createSocialLinkValidators = [
     body('name').notEmpty().withMessage('El nombre del enlace social es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
     body('url').notEmpty().withMessage('La URL es obligatoria').isURL().withMessage('La URL debe ser válida'),
@@ -9,7 +9,7 @@ const createSocialLinkValidators = [
     body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
 ];
 
-// **Crear un nuevo enlace social (POST)**
+
 exports.createSocialLink = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -25,7 +25,7 @@ exports.createSocialLink = async (req, res) => {
     }
 };
 
-// **Obtener todos los enlaces sociales (GET) - Pública**
+
 exports.getAllSocialLinks = async (req, res) => {
     try {
         const socialLinks = await SocialLink.findAll();
@@ -35,7 +35,7 @@ exports.getAllSocialLinks = async (req, res) => {
     }
 };
 
-// **Validaciones para la actualización de un enlace social**
+
 const updateSocialLinkValidators = [
     param('id').isInt().withMessage('El ID del enlace social debe ser un número entero'),
     body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
@@ -44,7 +44,7 @@ const updateSocialLinkValidators = [
     body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
 ];
 
-// **Actualizar un enlace social (PUT)**
+
 exports.updateSocialLink = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -67,12 +67,12 @@ exports.updateSocialLink = async (req, res) => {
     }
 };
 
-// **Validaciones para la eliminación de un enlace social**
+
 const deleteSocialLinkValidators = [
     param('id').isInt().withMessage('El ID del enlace social debe ser un número entero'),
 ];
 
-// **Eliminar un enlace social (DELETE)**
+
 exports.deleteSocialLink = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -94,7 +94,7 @@ exports.deleteSocialLink = async (req, res) => {
     }
 };
 
-// **Exportar validaciones y funciones**
+
 module.exports = {
     createSocialLinkValidators,
     updateSocialLinkValidators,

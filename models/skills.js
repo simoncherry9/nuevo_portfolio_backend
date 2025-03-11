@@ -12,16 +12,16 @@ const Skill = sequelize.define('Skill', {
         allowNull: false
     },
     proficiency: {
-        type: DataTypes.INTEGER, // Porcentaje o nivel de habilidad
+        type: DataTypes.INTEGER, 
         allowNull: false
     },
     category: {
-        type: DataTypes.STRING, // Como "Frontend", "Backend", "DevOps", etc.
+        type: DataTypes.STRING, 
         allowNull: true
     },
     isActive: {
-        type: DataTypes.BOOLEAN, // Estado de la habilidad
-        defaultValue: true, // Se asume que la habilidad está activa por defecto
+        type: DataTypes.BOOLEAN, 
+        defaultValue: true, 
         allowNull: false
     }
 });
