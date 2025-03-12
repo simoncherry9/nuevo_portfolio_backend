@@ -10,7 +10,7 @@ const { createContactMessageValidators, updateContactMessageValidators, deleteCo
 router.get('/', authMiddleware, contactController.getAllContactMessages);
 
 
-router.post('/', authMiddleware, createContactMessageValidators, contactController.createContactMessage);
+router.post('/', createContactMessageValidators, contactController.createContactMessage);
 
 
 router.put('/:id', authMiddleware, updateContactMessageValidators, contactController.updateContactMessage);

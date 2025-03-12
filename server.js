@@ -19,7 +19,7 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:3000',  
+    origin: 'http://localhost:4200',  
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
