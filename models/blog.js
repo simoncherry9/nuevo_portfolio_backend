@@ -28,6 +28,10 @@ const BlogPost = sequelize.define('BlogPost', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true 
+    },
+    imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
     }
 });
 

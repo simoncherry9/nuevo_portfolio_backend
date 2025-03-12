@@ -1,13 +1,12 @@
 const { validationResult, body, param } = require('express-validator');
 const BlogPost = require('../models/blog');
 
-
 const createBlogPostValidators = [
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('content').notEmpty().withMessage('El contenido es obligatorio').isLength({ min: 10 }).withMessage('Mínimo 10 caracteres'),
     body('author').notEmpty().withMessage('El autor es obligatorio').isLength({ max: 50 }).withMessage('Máximo 50 caracteres'),
+    body('imageUrl').optional().isURL().withMessage('La URL de la imagen no es válida'),
 ];
-
 
 exports.createBlogPost = async (req, res) => {
     const errors = validationResult(req);
@@ -16,8 +15,8 @@ exports.createBlogPost = async (req, res) => {
     }
 
     try {
-        const { title, content, author } = req.body;
-        const blogPost = await BlogPost.create({ title, content, author });
+        const { title, content, author, imageUrl } = req.body;
+        const blogPost = await BlogPost.create({ title, content, author, imageUrl });
         res.status(201).json({ message: 'Blog creado con éxito', blogPost });
     } catch (error) {
         console.error('Error al crear el blog:', error);
@@ -30,6 +29,7 @@ const updateBlogPostValidators = [
     body('title').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('content').optional().isLength({ min: 10 }).withMessage('Mínimo 10 caracteres'),
     body('author').optional().isLength({ max: 50 }).withMessage('Máximo 50 caracteres'),
+    body('imageUrl').optional().isURL().withMessage('La URL de la imagen no es válida'),
 ];
 
 exports.updateBlogPost = async (req, res) => {
@@ -40,7 +40,7 @@ exports.updateBlogPost = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { title, content, author } = req.body;
+        const { title, content, author, imageUrl } = req.body;
 
         const blogPost = await BlogPost.findByPk(id);
         if (!blogPost) {
@@ -50,7 +50,8 @@ exports.updateBlogPost = async (req, res) => {
         await blogPost.update({ 
             title: title || blogPost.title, 
             content: content || blogPost.content, 
-            author: author || blogPost.author 
+            author: author || blogPost.author,
+            imageUrl: imageUrl || blogPost.imageUrl, // Actualizar el link de la imagen si se proporciona
         });
 
         res.status(200).json({ message: 'Blog actualizado con éxito', blogPost });
@@ -60,11 +61,9 @@ exports.updateBlogPost = async (req, res) => {
     }
 };
 
-
 const deleteBlogPostValidators = [
     param('id').isInt().withMessage('El ID debe ser un número entero'),
 ];
-
 
 exports.deleteBlogPost = async (req, res) => {
     const errors = validationResult(req);
@@ -88,7 +87,6 @@ exports.deleteBlogPost = async (req, res) => {
     }
 };
 
-
 exports.getAllBlogPosts = async (req, res) => {
     try {
         const blogPosts = await BlogPost.findAll({ where: { isActive: true } });
@@ -98,7 +96,6 @@ exports.getAllBlogPosts = async (req, res) => {
         res.status(500).json({ error: 'Hubo un error al obtener los blogs, inténtalo más tarde.' });
     }
 };
-
 
 exports.toggleBlogVisibility = async (req, res) => {
     try {
@@ -112,7 +109,6 @@ exports.toggleBlogVisibility = async (req, res) => {
         res.status(500).json({ error: 'Hubo un error, inténtalo más tarde.' });
     }
 };
-
 
 module.exports = {
     createBlogPostValidators,
