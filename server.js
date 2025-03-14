@@ -9,6 +9,7 @@ const proyectsRoutes = require('./routes/proyectsRoutes');
 const skillsRoutes = require('./routes/skillsRoutes');
 const sociallinksRoutes = require('./routes/sociallinksRoutes');
 const testimonialsRoutes = require('./routes/testimonialRoutes');
+const certificatesRoutes = require('./routes/certificatesRoutes');
 require('dotenv').config();
 
 const configureMiddlewares = require('./middleware/middleware');
@@ -46,6 +47,7 @@ app.use('/api/projects', proyectsRoutes);
 app.use('/api/skills', skillsRoutes);
 app.use('/api/social-links', sociallinksRoutes);
 app.use('/api/testimonials', testimonialsRoutes);
+app.use('/api/certificates', certificatesRoutes);
 
 const startServer = async () => {
     try {

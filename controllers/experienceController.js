@@ -88,14 +88,14 @@ const updateExperience = async (req, res) => {
             return res.status(400).json({ message: 'La fecha de inicio no puede ser posterior a la fecha de finalización' });
         }
 
-        // Asegúrate de que 'isActive' esté como 1 o 0
+        
         const updatedExperience = {
             title,
             company,
             startDate,
             endDate,
             description,
-            isActive: isActive ? 1 : 0  // Asegura que isActive sea 1 o 0
+            isActive: isActive ? 1 : 0  
         };
 
         await experience.update(updatedExperience);

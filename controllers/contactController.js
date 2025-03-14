@@ -1,7 +1,7 @@
 const { validationResult, body, param } = require('express-validator');  
 const ContactMessage = require('../models/contact');
 
-// Validadores para crear un mensaje de contacto
+
 const createContactMessageValidators = [
     body('name')
         .notEmpty().withMessage('El nombre es obligatorio')
@@ -15,7 +15,7 @@ const createContactMessageValidators = [
         .isLength({ min: 10 }).withMessage('El mensaje debe tener al menos 10 caracteres')
 ];
 
-// Validadores para actualizar un mensaje de contacto
+
 const updateContactMessageValidators = [
     param('id')
         .isInt().withMessage('El ID del mensaje debe ser un número entero'),  
@@ -31,12 +31,12 @@ const updateContactMessageValidators = [
         .isLength({ min: 10 }).withMessage('El mensaje debe tener al menos 10 caracteres'),
 ];
 
-// Validadores para eliminar un mensaje de contacto
+
 const deleteContactMessageValidators = [
     param('id').isInt().withMessage('El ID del mensaje debe ser un número entero'),
 ];
 
-// Controlador para crear un mensaje de contacto
+
 exports.createContactMessage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -54,7 +54,7 @@ exports.createContactMessage = async (req, res) => {
     }
 };
 
-// Controlador para actualizar un mensaje de contacto
+
 exports.updateContactMessage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -78,7 +78,7 @@ exports.updateContactMessage = async (req, res) => {
     }
 };
 
-// Controlador para eliminar un mensaje de contacto
+
 exports.deleteContactMessage = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -101,7 +101,7 @@ exports.deleteContactMessage = async (req, res) => {
     }
 };
 
-// Controlador para obtener todos los mensajes de contacto
+
 exports.getAllContactMessages = async (req, res) => {
     try {
         const contactMessages = await ContactMessage.findAll();

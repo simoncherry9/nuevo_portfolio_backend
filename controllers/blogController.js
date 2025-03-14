@@ -51,7 +51,7 @@ exports.updateBlogPost = async (req, res) => {
             title: title || blogPost.title, 
             content: content || blogPost.content, 
             author: author || blogPost.author,
-            imageUrl: imageUrl || blogPost.imageUrl, // Actualizar el link de la imagen si se proporciona
+            imageUrl: imageUrl || blogPost.imageUrl, 
         });
 
         res.status(200).json({ message: 'Blog actualizado con éxito', blogPost });
@@ -136,5 +136,5 @@ module.exports = {
     deleteBlogPost: exports.deleteBlogPost,
     getAllBlogPosts: exports.getAllBlogPosts,
     toggleBlogVisibility: exports.toggleBlogVisibility,
-    getBlogPostById: exports.getBlogPostById,  // Agregar esta línea
+    getBlogPostById: exports.getBlogPostById,  
 };
