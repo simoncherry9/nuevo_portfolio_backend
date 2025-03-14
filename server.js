@@ -4,12 +4,12 @@ const userRoutes = require('./routes/userRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const experienceRoutes = require('./routes/experienceRoutes');
-const galleryRoutes = require('./routes/galleryRoutes');
 const proyectsRoutes = require('./routes/proyectsRoutes');
 const skillsRoutes = require('./routes/skillsRoutes');
 const sociallinksRoutes = require('./routes/sociallinksRoutes');
 const testimonialsRoutes = require('./routes/testimonialRoutes');
 const certificatesRoutes = require('./routes/certificatesRoutes');
+const ProfileRoutes = require('./routes/profileRoutes');
 require('dotenv').config();
 
 const configureMiddlewares = require('./middleware/middleware');
@@ -42,12 +42,12 @@ app.use('/api/users', userRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/experience', experienceRoutes);
-app.use('/api/gallery', galleryRoutes);
 app.use('/api/projects', proyectsRoutes);
 app.use('/api/skills', skillsRoutes);
 app.use('/api/social-links', sociallinksRoutes);
 app.use('/api/testimonials', testimonialsRoutes);
 app.use('/api/certificates', certificatesRoutes);
+app.use('/api/profile', ProfileRoutes);
 
 const startServer = async () => {
     try {
