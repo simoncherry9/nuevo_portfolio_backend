@@ -61,6 +61,23 @@ exports.updateBlogPost = async (req, res) => {
     }
 };
 
+exports.getBlogPostById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const blogPost = await BlogPost.findByPk(id);
+
+        if (!blogPost) {
+            return res.status(404).json({ message: 'Blog no encontrado' });
+        }
+
+        res.status(200).json(blogPost);
+    } catch (error) {
+        console.error('Error al obtener el blog:', error);
+        res.status(500).json({ error: 'Hubo un error al obtener el blog, inténtalo más tarde.' });
+    }
+};
+
 const deleteBlogPostValidators = [
     param('id').isInt().withMessage('El ID debe ser un número entero'),
 ];
@@ -119,4 +136,5 @@ module.exports = {
     deleteBlogPost: exports.deleteBlogPost,
     getAllBlogPosts: exports.getAllBlogPosts,
     toggleBlogVisibility: exports.toggleBlogVisibility,
+    getBlogPostById: exports.getBlogPostById,  // Agregar esta línea
 };

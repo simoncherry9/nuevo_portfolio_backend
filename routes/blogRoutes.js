@@ -21,4 +21,8 @@ router.delete('/:id', authMiddleware, deleteBlogPostValidators, blogController.d
 
 router.put('/toggle-visibility', authMiddleware, blogController.toggleBlogVisibility);
 
+
+router.get('/:id', blogController.getBlogPostById);
+
+
 module.exports = router;
