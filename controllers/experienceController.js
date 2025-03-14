@@ -77,7 +77,7 @@ const updateExperience = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { title, company, startDate, endDate, description } = req.body;
+        const { title, company, startDate, endDate, description, isActive } = req.body;
 
         const experience = await Experience.findByPk(id);
         if (!experience) {
@@ -88,13 +88,24 @@ const updateExperience = async (req, res) => {
             return res.status(400).json({ message: 'La fecha de inicio no puede ser posterior a la fecha de finalización' });
         }
 
-        await experience.update({ title, company, startDate, endDate, description });
-        res.status(200).json({ message: 'Experiencia laboral actualizada', experience });
+        // Asegúrate de que 'isActive' esté como 1 o 0
+        const updatedExperience = {
+            title,
+            company,
+            startDate,
+            endDate,
+            description,
+            isActive: isActive ? 1 : 0  // Asegura que isActive sea 1 o 0
+        };
+
+        await experience.update(updatedExperience);
+        res.status(200).json({ message: 'Experiencia laboral actualizada', experience: updatedExperience });
     } catch (error) {
         console.error('Error al actualizar la experiencia laboral:', error);
         res.status(500).json({ error: 'Hubo un error al actualizar la experiencia laboral, inténtalo más tarde.' });
     }
 };
+
 
 
 const deleteExperienceValidators = [
