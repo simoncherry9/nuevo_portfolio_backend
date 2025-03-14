@@ -4,43 +4,42 @@ const sequelize = require('../config/database');
 // Definición del modelo 'Profile'
 const Profile = sequelize.define('Profile', {
     nombre: {
-      type: Sequelize.STRING,
-      allowNull: false
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: false
     },
     apellido: {
-      type: Sequelize.STRING,
-      allowNull: false
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: false
     },
     correo_electronico: {
-      type: Sequelize.STRING,
-      allowNull: false
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: false
     },
     imageurl: {
-      type: Sequelize.STRING,
-      allowNull: true
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: true
     },
     ciudad: {
-      type: Sequelize.STRING,
-      allowNull: true
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: true
     },
     provincia: {
-      type: Sequelize.STRING,
-      allowNull: true
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: true
     },
     pais: {
-      type: Sequelize.STRING,
-      allowNull: true
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: true
     },
     descripcion: {
-      type: Sequelize.STRING,
-      allowNull: true
+        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        allowNull: true
     }
-  }, {
+}, {
     timestamps: true,  // Asegúrate de que Sequelize maneje automáticamente los timestamps
-  });
-  
-  // Este modelo debería manejar automáticamente los campos createdAt y updatedAt
-  
+});
+
+// Este modelo debería manejar automáticamente los campos createdAt y updatedAt
 
 // Sincronizar el modelo con la base de datos
 Profile.sync({ alter: true });

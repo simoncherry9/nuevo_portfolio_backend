@@ -31,6 +31,26 @@ const Project = sequelize.define('Project', {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
+    },
+    image1: {
+        type: DataTypes.STRING(500),  
+        allowNull: true
+    },
+    image2: {
+        type: DataTypes.STRING(500), 
+        allowNull: true
+    },
+    image3: {
+        type: DataTypes.STRING(500),  
+        allowNull: true
+    },
+    image4: {
+        type: DataTypes.STRING(500), 
+        allowNull: true
+    },
+    image5: {
+        type: DataTypes.STRING(500),  
+        allowNull: true
     }
 });
 

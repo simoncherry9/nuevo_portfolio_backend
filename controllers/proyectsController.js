@@ -1,15 +1,18 @@
 const { validationResult, body, param } = require('express-validator');
 const Project = require('../models/proyects');
 
-
 const createProjectValidators = [
     body('title').notEmpty().withMessage('El título es obligatorio').isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
     body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
     body('technologies').optional().isArray().withMessage('Las tecnologías deben ser un array'),
     body('link').optional().isURL().withMessage('El enlace debe ser una URL válida'),
-    body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano')
+    body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano'),
+    body('image1').optional().isString().isLength({ max: 500 }).withMessage('La imagen 1 no puede tener más de 500 caracteres'),
+    body('image2').optional().isString().isLength({ max: 500 }).withMessage('La imagen 2 no puede tener más de 500 caracteres'),
+    body('image3').optional().isString().isLength({ max: 500 }).withMessage('La imagen 3 no puede tener más de 500 caracteres'),
+    body('image4').optional().isString().isLength({ max: 500 }).withMessage('La imagen 4 no puede tener más de 500 caracteres'),
+    body('image5').optional().isString().isLength({ max: 500 }).withMessage('La imagen 5 no puede tener más de 500 caracteres')
 ];
-
 
 exports.createProject = async (req, res) => {
     const errors = validationResult(req);
@@ -18,15 +21,25 @@ exports.createProject = async (req, res) => {
     }
 
     try {
-        const { title, description, technologies, link, isActive } = req.body;
-        const project = await Project.create({ title, description, technologies, link, isActive });
+        const { title, description, technologies, link, isActive, image1, image2, image3, image4, image5 } = req.body;
+        const project = await Project.create({
+            title,
+            description,
+            technologies,
+            link,
+            isActive,
+            image1,
+            image2,
+            image3,
+            image4,
+            image5
+        });
         res.status(201).json({ message: 'Proyecto creado', project });
     } catch (error) {
         console.error('Error al crear el proyecto:', error);
         res.status(500).json({ error: 'Hubo un error al crear el proyecto, inténtalo más tarde.' });
     }
 };
-
 
 exports.getAllProjects = async (req, res) => {
     try {
@@ -38,7 +51,6 @@ exports.getAllProjects = async (req, res) => {
     }
 };
 
-
 exports.getActiveProjects = async (req, res) => {
     try {
         const projects = await Project.findAll({ where: { isActive: true } });
@@ -49,16 +61,19 @@ exports.getActiveProjects = async (req, res) => {
     }
 };
 
-
 const updateProjectValidators = [
     param('id').isInt().withMessage('El ID del proyecto debe ser un número entero'),
     body('title').optional().isLength({ max: 100 }).withMessage('El título no puede tener más de 100 caracteres'),
     body('description').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
     body('technologies').optional().isArray().withMessage('Las tecnologías deben ser un array'),
     body('link').optional().isURL().withMessage('El enlace debe ser una URL válida'),
-    body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano')
+    body('isActive').optional().isBoolean().withMessage('El estado activo debe ser un valor booleano'),
+    body('image1').optional().isString().isLength({ max: 500 }).withMessage('La imagen 1 no puede tener más de 500 caracteres'),
+    body('image2').optional().isString().isLength({ max: 500 }).withMessage('La imagen 2 no puede tener más de 500 caracteres'),
+    body('image3').optional().isString().isLength({ max: 500 }).withMessage('La imagen 3 no puede tener más de 500 caracteres'),
+    body('image4').optional().isString().isLength({ max: 500 }).withMessage('La imagen 4 no puede tener más de 500 caracteres'),
+    body('image5').optional().isString().isLength({ max: 500 }).withMessage('La imagen 5 no puede tener más de 500 caracteres')
 ];
-
 
 exports.updateProject = async (req, res) => {
     const errors = validationResult(req);
@@ -68,14 +83,25 @@ exports.updateProject = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { title, description, technologies, link, isActive } = req.body;
+        const { title, description, technologies, link, isActive, image1, image2, image3, image4, image5 } = req.body;
 
         const project = await Project.findByPk(id);
         if (!project) {
             return res.status(404).json({ message: 'Proyecto no encontrado' });
         }
 
-        await project.update({ title, description, technologies, link, isActive });
+        await project.update({
+            title,
+            description,
+            technologies,
+            link,
+            isActive,
+            image1,
+            image2,
+            image3,
+            image4,
+            image5
+        });
         res.status(200).json({ message: 'Proyecto actualizado', project });
     } catch (error) {
         console.error('Error al actualizar el proyecto:', error);
@@ -83,11 +109,9 @@ exports.updateProject = async (req, res) => {
     }
 };
 
-
 const deleteProjectValidators = [
     param('id').isInt().withMessage('El ID del proyecto debe ser un número entero')
 ];
-
 
 exports.deleteProject = async (req, res) => {
     const errors = validationResult(req);
@@ -110,7 +134,6 @@ exports.deleteProject = async (req, res) => {
         res.status(500).json({ error: 'Hubo un error al eliminar el proyecto, inténtalo más tarde.' });
     }
 };
-
 
 module.exports = {
     createProjectValidators,
