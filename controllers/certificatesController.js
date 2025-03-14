@@ -1,5 +1,5 @@
 const { validationResult, body, param } = require('express-validator');
-const Certificate = require('../models/certificate');
+const Certificate = require('../models/certificates');
 
 const createCertificateValidators = [
     body('titulo').notEmpty().withMessage('El título es obligatorio').isLength({ max: 255 }).withMessage('El título no puede tener más de 255 caracteres'),
@@ -9,6 +9,11 @@ const createCertificateValidators = [
     body('descripcion').optional().isLength({ max: 500 }).withMessage('La descripción no puede tener más de 500 caracteres'),
     body('linkimageurl').optional().isURL().withMessage('El enlace de la imagen debe ser una URL válida'),
 ];
+
+const getCertificateByIdValidators = [
+    param('id').isInt().withMessage('El ID del certificado debe ser un número entero'),
+];
+
 
 const createCertificate = async (req, res) => {
     const errors = validationResult(req);
@@ -148,5 +153,7 @@ module.exports = {
     deleteCertificate,
     getAllCertificates,
     getActiveCertificates,
-    getCertificateById
+    getCertificateById,
+    getCertificateByIdValidators
 };
+

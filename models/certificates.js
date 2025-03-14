@@ -1,5 +1,6 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database';
+// En certificates.js (Cambiar de import a require)
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/database');
 
 class Certificate extends Model {}
 
@@ -53,4 +54,4 @@ Certificate.init(
   }
 );
 
-export default Certificate;
+module.exports = Certificate;
