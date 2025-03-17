@@ -1,47 +1,47 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-// Definición del modelo 'Profile'
+
 const Profile = sequelize.define('Profile', {
     nombre: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: false
     },
     apellido: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: false
     },
     correo_electronico: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: false
     },
     imageurl: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: true
     },
     ciudad: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: true
     },
     provincia: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: true
     },
     pais: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: true
     },
     descripcion: {
-        type: DataTypes.STRING,  // Usamos DataTypes en lugar de Sequelize
+        type: DataTypes.STRING,  
         allowNull: true
     }
 }, {
-    timestamps: true,  // Asegúrate de que Sequelize maneje automáticamente los timestamps
+    timestamps: true,  
 });
 
-// Este modelo debería manejar automáticamente los campos createdAt y updatedAt
 
-// Sincronizar el modelo con la base de datos
+
+
 Profile.sync({ alter: true });
 
 module.exports = Profile;

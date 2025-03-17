@@ -32,23 +32,23 @@ const Project = sequelize.define('Project', {
         allowNull: false,
         defaultValue: DataTypes.NOW
     },
-    image1: {
+    image1url: {
         type: DataTypes.STRING(500),  
         allowNull: true
     },
-    image2: {
+    image2url: {
         type: DataTypes.STRING(500), 
         allowNull: true
     },
-    image3: {
+    image3url: {
         type: DataTypes.STRING(500),  
         allowNull: true
     },
-    image4: {
+    image4url: {
         type: DataTypes.STRING(500), 
         allowNull: true
     },
-    image5: {
+    image5url: {
         type: DataTypes.STRING(500),  
         allowNull: true
     }
