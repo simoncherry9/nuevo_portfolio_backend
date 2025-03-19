@@ -11,6 +11,7 @@ const createProfileValidators = [
     body('provincia').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('pais').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('descripcion').optional().isLength({ max: 500 }).withMessage('Máximo 500 caracteres'),
+    body('tryhackme_url').optional().isURL().withMessage('La URL de TryHackMe no es válida'),  // Agregar validación para tryhackme_url
 ];
 
 // Controlador para crear un perfil
@@ -21,7 +22,7 @@ exports.createProfile = async (req, res) => {
     }
 
     try {
-        const { nombre, apellido, correo_electronico, imageurl, ciudad, provincia, pais, descripcion } = req.body;
+        const { nombre, apellido, correo_electronico, imageurl, ciudad, provincia, pais, descripcion, tryhackme_url } = req.body;
         const newProfile = await Profile.create({ 
             nombre, 
             apellido, 
@@ -30,7 +31,8 @@ exports.createProfile = async (req, res) => {
             ciudad, 
             provincia, 
             pais, 
-            descripcion 
+            descripcion,
+            tryhackme_url // Incluir tryhackme_url en el perfil creado
         });
 
         res.status(201).json({ message: 'Perfil creado con éxito', newProfile });
@@ -51,6 +53,7 @@ const updateProfileValidators = [
     body('provincia').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('pais').optional().isLength({ max: 100 }).withMessage('Máximo 100 caracteres'),
     body('descripcion').optional().isLength({ max: 500 }).withMessage('Máximo 500 caracteres'),
+    body('tryhackme_url').optional().isURL().withMessage('La URL de TryHackMe no es válida'), // Validación para tryhackme_url
 ];
 
 // Controlador para actualizar un perfil
@@ -62,7 +65,7 @@ exports.updateProfile = async (req, res) => {
 
     try {
         const { id } = req.params;
-        const { nombre, apellido, correo_electronico, imageurl, ciudad, provincia, pais, descripcion } = req.body;
+        const { nombre, apellido, correo_electronico, imageurl, ciudad, provincia, pais, descripcion, tryhackme_url } = req.body;
 
         const profile = await Profile.findByPk(id);
         if (!profile) {
@@ -78,6 +81,7 @@ exports.updateProfile = async (req, res) => {
             provincia: provincia || profile.provincia, 
             pais: pais || profile.pais, 
             descripcion: descripcion || profile.descripcion,
+            tryhackme_url: tryhackme_url || profile.tryhackme_url // Actualizar tryhackme_url
         });
 
         res.status(200).json({ message: 'Perfil actualizado con éxito', profile });

@@ -10,6 +10,7 @@ const sociallinksRoutes = require('./routes/sociallinksRoutes');
 const testimonialsRoutes = require('./routes/testimonialRoutes');
 const certificatesRoutes = require('./routes/certificatesRoutes');
 const ProfileRoutes = require('./routes/profileRoutes');
+const estudiosRoutes = require('./routes/estudiosRoutes');
 require('dotenv').config();
 
 const configureMiddlewares = require('./middleware/middleware');
@@ -48,6 +49,7 @@ app.use('/api/social-links', sociallinksRoutes);
 app.use('/api/testimonials', testimonialsRoutes);
 app.use('/api/certificates', certificatesRoutes);
 app.use('/api/profile', ProfileRoutes);
+app.use('/api/estudios', estudiosRoutes);
 
 const startServer = async () => {
     try {

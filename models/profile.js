@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-
 const Profile = sequelize.define('Profile', {
     nombre: {
         type: DataTypes.STRING,  
@@ -34,13 +33,17 @@ const Profile = sequelize.define('Profile', {
     descripcion: {
         type: DataTypes.STRING,  
         allowNull: true
+    },
+    tryhackme_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+            isURL: true
+        }
     }
 }, {
     timestamps: true,  
 });
-
-
-
 
 Profile.sync({ alter: true });
 
