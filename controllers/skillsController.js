@@ -1,14 +1,12 @@
 const { validationResult, body, param } = require('express-validator');
 const Skill = require('../models/skills');
 
-
 const createSkillValidators = [
     body('name').notEmpty().withMessage('El nombre de la habilidad es obligatorio').isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
-    body('proficiency').notEmpty().withMessage('El nivel de habilidad es obligatorio').isInt({ min: 1, max: 5 }).withMessage('El nivel de habilidad debe ser un número entre 1 y 5'),
+    body('proficiency').notEmpty().withMessage('El nivel de habilidad es obligatorio').isInt().withMessage('El nivel de habilidad debe ser un número entero'),
     body('category').notEmpty().withMessage('La categoría es obligatoria').isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
     body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') 
 ];
-
 
 exports.createSkill = async (req, res) => {
     const errors = validationResult(req);
@@ -25,7 +23,6 @@ exports.createSkill = async (req, res) => {
     }
 };
 
-
 exports.getAllActiveSkills = async (req, res) => {
     try {
         const skills = await Skill.findAll({ where: { isActive: true } }); 
@@ -34,7 +31,6 @@ exports.getAllActiveSkills = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 exports.getAllSkills = async (req, res) => {
     try {
@@ -45,15 +41,13 @@ exports.getAllSkills = async (req, res) => {
     }
 };
 
-
 const updateSkillValidators = [
     param('id').isInt().withMessage('El ID de la habilidad debe ser un número entero'),
     body('name').optional().isLength({ max: 100 }).withMessage('El nombre no puede tener más de 100 caracteres'),
-    body('proficiency').optional().isInt({ min: 1, max: 5 }).withMessage('El nivel de habilidad debe ser un número entre 1 y 5'),
+    body('proficiency').optional().isInt().withMessage('El nivel de habilidad debe ser un número entero'),
     body('category').optional().isLength({ max: 50 }).withMessage('La categoría no puede tener más de 50 caracteres'),
     body('isActive').optional().isBoolean().withMessage('isActive debe ser un valor booleano') 
 ];
-
 
 exports.updateSkill = async (req, res) => {
     const errors = validationResult(req);
@@ -77,11 +71,9 @@ exports.updateSkill = async (req, res) => {
     }
 };
 
-
 const deleteSkillValidators = [
     param('id').isInt().withMessage('El ID de la habilidad debe ser un número entero'),
 ];
-
 
 exports.deleteSkill = async (req, res) => {
     const errors = validationResult(req);
@@ -103,7 +95,6 @@ exports.deleteSkill = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 module.exports = {
     createSkillValidators,

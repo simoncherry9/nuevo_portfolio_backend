@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+// Definimos el modelo Skill, pero ya debe usar la tabla 'skills' existente
 const Skill = sequelize.define('Skill', {
     id: {
         type: DataTypes.INTEGER,
@@ -24,6 +25,10 @@ const Skill = sequelize.define('Skill', {
         defaultValue: true, 
         allowNull: false
     }
+}, {
+    timestamps: true,  // Esto mantiene los campos createdAt y updatedAt en la tabla
+    freezeTableName: true,  // Esto evita que Sequelize pluralice el nombre de la tabla
+    tableName: 'skills'  // Especificamos explícitamente que debe usar la tabla 'skills'
 });
 
 module.exports = Skill;

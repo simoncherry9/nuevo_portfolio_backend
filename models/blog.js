@@ -25,14 +25,18 @@ const BlogPost = sequelize.define('BlogPost', {
         allowNull: false
     },
     isActive: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: true 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: true, 
+        allowNull: false
     },
     imageUrl: {
         type: DataTypes.STRING,
         allowNull: true,
     }
+}, {
+    timestamps: true,  // Mantiene los campos createdAt y updatedAt en la tabla
+    freezeTableName: true,  // Evita que Sequelize pluralice el nombre de la tabla
+    tableName: 'blogposts'  // Especificamos explícitamente el nombre de la tabla
 });
 
 module.exports = BlogPost;

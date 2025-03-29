@@ -52,6 +52,10 @@ const Project = sequelize.define('Project', {
         type: DataTypes.STRING(500),  
         allowNull: true
     }
+}, {
+    timestamps: true,  // Esto mantiene los campos createdAt y updatedAt en la tabla
+    freezeTableName: true,  // Esto evita que Sequelize pluralice el nombre de la tabla
+    tableName: 'projects'  // Especificamos explícitamente que debe usar la tabla 'projects'
 });
 
 module.exports = Project;

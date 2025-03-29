@@ -43,6 +43,8 @@ const Profile = sequelize.define('Profile', {
     }
 }, {
     timestamps: true,  
+    freezeTableName: true,  // Esto evita que Sequelize pluralice el nombre de la tabla
+    tableName: 'profiles'  // Especificamos explícitamente que debe usar la tabla 'profiles'
 });
 
 Profile.sync({ alter: true });

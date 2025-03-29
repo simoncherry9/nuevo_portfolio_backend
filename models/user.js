@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+// Definimos el modelo User, pero ya debe usar la tabla 'users' existente
 const User = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
@@ -25,7 +26,9 @@ const User = sequelize.define('User', {
         allowNull: false
     }
 }, {
-    timestamps: true
+    timestamps: true,  // Esto mantiene los campos createdAt y updatedAt en la tabla
+    freezeTableName: true,  // Esto evita que Sequelize pluralice el nombre de la tabla
+    tableName: 'users'  // Especificamos explícitamente que debe usar la tabla 'users'
 });
 
 module.exports = User;

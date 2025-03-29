@@ -13,32 +13,27 @@ const ProfileRoutes = require('./routes/profileRoutes');
 const estudiosRoutes = require('./routes/estudiosRoutes');
 require('dotenv').config();
 
-const configureMiddlewares = require('./middleware/middleware');
-const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
-const cors = require('cors');  
+const cors = require('cors');
 
 const app = express();
 
+// CORS
 const corsOptions = {
-    origin: 'http://localhost:4200',  
+    origin: 'http://localhost:4200',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
+app.use(cors(corsOptions));
 
-app.use(cors(corsOptions)); 
+// Middleware para logs HTTP
+app.use(morgan('dev'));
 
-app.use(morgan('dev')); 
+// Middleware para manejar JSON y datos de formularios
+app.use(express.json());  
+app.use(express.urlencoded({ extended: true }));
 
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, 
-    max: 100,
-    message: 'Demasiadas solicitudes desde esta IP, por favor intente más tarde',
-});
-
-app.use(limiter); 
-configureMiddlewares(app);
-
+// Rutas
 app.use('/api/users', userRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/contact', contactRoutes);
@@ -51,6 +46,7 @@ app.use('/api/certificates', certificatesRoutes);
 app.use('/api/profile', ProfileRoutes);
 app.use('/api/estudios', estudiosRoutes);
 
+// Función para iniciar el servidor
 const startServer = async () => {
     try {
         await sequelize.authenticate();
@@ -59,9 +55,27 @@ const startServer = async () => {
         await sequelize.sync({ force: false });
 
         const PORT = process.env.PORT || 3001;
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, () => {
             console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
         });
+
+        // Manejo del cierre de la BD
+        const closeDatabase = async () => {
+            console.log('🔔 Cerrando la conexión a la base de datos...');
+            try {
+                await sequelize.close();
+                console.log('✅ Conexión a la base de datos cerrada');
+                process.exit(0);
+            } catch (err) {
+                console.error('❌ Error al cerrar la conexión:', err);
+                process.exit(1);
+            }
+        };
+
+        process.on('SIGINT', closeDatabase);
+        process.on('SIGTERM', closeDatabase);
+        process.on('exit', closeDatabase);
+
     } catch (error) {
         console.error('❌ Error de conexión:', error);
         process.exit(1);

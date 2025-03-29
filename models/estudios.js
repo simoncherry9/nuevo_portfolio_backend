@@ -44,8 +44,9 @@ Study.init(
   {
     sequelize,
     modelName: 'Study',
-    tableName: 'studies',
+    tableName: 'studies',  // Aseguramos que la tabla siempre se llame 'studies'
     timestamps: true,
+    freezeTableName: true,  // Esto evita que Sequelize pluralice el nombre de la tabla
   }
 );
 
